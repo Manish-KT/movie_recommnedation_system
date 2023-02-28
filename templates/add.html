@@ -1,0 +1,43 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block styles %}
+  {{ super() }}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700"
+      xmlns="http://www.w3.org/1999/html">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}
+
+{% block title %}Add Movie{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <h1 class="heading">Add a Movie</h1>
+    </div>
+    {% if not show %}
+        <div class="card mt-5">
+            <form method="POST" action="{{ url_for('add_movie') }}">
+                <div class="card-title">{{ form.title.label }}: <br>{{ form.title(class="css_class", style="width:50%; margin-bottom:2%;") }}</div>
+                <div>{{ form.submit(class="btn btn-primary") }}</div>
+            </form>
+        </div>
+    {% else %}
+            {% for movie in movie_list %}
+            <div class="card ratio ratio-16x9 " style="margin-bottom: 10rem;" >
+                <div style="object-fit: cover;">
+                    {% if movie['primaryImage']['url'] == null %}
+                    <img src="static/404.png" class="card-img-top" alt="poster not found" style="width:20rem; height:20rem;">
+                    {% else %}
+                    <img src="{{movie['primaryImage']['url']}}" class="card-img-top" alt="movie poster" style="width:20rem; height:20rem;">
+                    {% endif %}
+                </div>
+                <div class="card-body" >
+                    <h5 class="card-title">{{ movie["titleText"]["text"] }}</h5>
+                    <p class="card-text">{{ movie["releaseDate"]["year"] }}/{{ movie["releaseDate"]["month"] }}/{{ movie["releaseDate"]["day"] }}</p>
+                    <a href="{{ url_for('home', data=movie) }}" class="btn btn-primary">Add movie</a>
+                </div>
+            </div>
+            {% endfor %}
+            <div style="padding: 0.5%;"></div>
+    {% endif %}
+{% endblock %}
